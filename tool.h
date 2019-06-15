@@ -22,6 +22,12 @@ private slots:
 
     void on_btnMD5_clicked();
 
+    void on_btnBase64_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_btnMD5Enc_clicked();
+
 private:
     Ui::tool *ui;
 };
