@@ -243,15 +243,47 @@
      <widget class="QPushButton" name="btnMD5Enc">
       <property name="geometry">
        <rect>
-        <x>364</x>
+        <x>354</x>
         <y>340</y>
-        <width>91</width>
+        <width>101</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
        <string>加密</string>
       </property>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>310</y>
+        <width>186</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QRadioButton" name="rBtnMD5Upper">
+         <property name="text">
+          <string>大写</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="rBtnMD5Lower">
+         <property name="text">
+          <string>小写</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </widget>
