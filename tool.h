@@ -2,6 +2,11 @@
 #define TOOL_H
 
 #include <QWidget>
+#include <QtNetwork/QNetworkAccessManager>
+#include <dialupdate.h>
+
+const QString CURR_VERSION = "v1.2.0";
+const QString UPDATE_URL = "https://api.github.com/repos/guanjialin/tool/releases/latest";
 
 namespace Ui {
 class tool;
@@ -30,8 +35,15 @@ private slots:
 
     void on_rBtnMD5Lower_clicked();
 
+    void update(QNetworkReply*);
+
 private:
     Ui::tool *ui;
+    DialUpdate *diagUpdate;
+
+private:
+    void checkUpdate();
+    void initSignal();
 };
 
 #endif // TOOL_H

@@ -1,13 +1,21 @@
 #include <QCryptographicHash>
+#include <QtNetwork/QNetworkReply>
+#include <QJsonParseError>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <iostream>
 #include "tool.h"
 #include "ui_tool.h"
+#include "dialupdate.h"
+#include "ui_dialupdate.h"
 
 tool::tool(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::tool)
 {
     ui->setupUi(this);
+    checkUpdate();
 }
 
 tool::~tool()
@@ -63,4 +71,44 @@ void tool::on_rBtnMD5Lower_clicked()
 {
     QString str = ui->txtMD5Show->toPlainText().trimmed();
     ui->txtMD5Show->setText(str.toLower());
+}
+
+void tool::update(QNetworkReply *reply)
+{
+    if (reply->error() != QNetworkReply::NoError) {
+        std::cout << "update error" << std::endl;
+        return;
+    }
+
+    QByteArray resp =  reply->readAll();
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(resp, &error);
+    if (error.error != QJsonParseError::NoError) {
+        std::cout << "parse json error" << std::endl;
+        return;
+    }
+
+    QJsonObject rootObj = doc.object();
+    QString version = rootObj.value("tag_name").toString();
+    if (version == CURR_VERSION) {
+        return;
+    }
+
+    QJsonArray assets = rootObj.value("assets").toArray();
+    QString assetUrl = assets[0].toObject().value("browser_download_url").toString();
+    QString descript = rootObj.value("body").toString();
+
+    diagUpdate = new DialUpdate;
+    diagUpdate->assetUrl = assetUrl;
+    diagUpdate->ui->labDiagUpdateVersion->setText(version);
+    diagUpdate->ui->txtDialUpdateDescript->setText(descript);
+    diagUpdate->show();
+}
+
+void tool::checkUpdate()
+{
+    QNetworkAccessManager *networkManager = new QNetworkAccessManager();
+    QObject::connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(update(QNetworkReply*)));
+
+    networkManager->get(QNetworkRequest(QUrl(UPDATE_URL)));
 }

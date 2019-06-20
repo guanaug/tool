@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 RC_ICONS = logo.ico
 
@@ -27,13 +27,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        dialupdate.cpp \
         main.cpp \
         tool.cpp
 
 HEADERS += \
+        dialupdate.h \
         tool.h
 
 FORMS += \
+        dialupdate.ui \
         tool.ui
 
 # Default rules for deployment.
