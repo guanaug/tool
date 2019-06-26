@@ -37,6 +37,16 @@ private slots:
 
     void update(QNetworkReply*);
 
+    void updateTime();
+
+    void on_btnJSONFormat_clicked();
+
+    void on_btnTimestamp_clicked();
+
+    void on_btnConvert2Timestamp_clicked();
+
+    void on_btnConvert2Time_clicked();
+
 private:
     Ui::tool *ui;
     DialUpdate *diagUpdate;

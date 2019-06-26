@@ -5,6 +5,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <iostream>
+#include <QTimer>
+#include <QDateTime>
+#include <QJsonDocument>
 #include "tool.h"
 #include "ui_tool.h"
 #include "dialupdate.h"
@@ -16,6 +19,10 @@ tool::tool(QWidget *parent) :
 {
     ui->setupUi(this);
     checkUpdate();
+
+    QTimer *timer = new QTimer(this);
+    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
+    timer->start(1000);
 }
 
 tool::~tool()
@@ -111,4 +118,45 @@ void tool::checkUpdate()
     QObject::connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(update(QNetworkReply*)));
 
     networkManager->get(QNetworkRequest(QUrl(UPDATE_URL)));
+}
+
+void tool::updateTime()
+{
+    QDateTime dt= QDateTime::currentDateTime();
+    ui->labCurrentTime->setText(dt.toString("yyyy-MM-dd hh:mm:ss"));
+    ui->labTimestamp->setText(QString::number(dt.toSecsSinceEpoch()));
+}
+
+void tool::on_btnJSONFormat_clicked()
+{
+    QJsonParseError jsonError;
+    QString strPlain = ui->txtJSON->toPlainText().simplified();
+    QJsonDocument json = QJsonDocument::fromJson(strPlain.toLocal8Bit(), &jsonError);
+    if (jsonError.error) {
+        ui->txtJSONError->setText(jsonError.errorString());
+        return;
+    }
+    ui->txtJSON->setText(json.toJson(QJsonDocument::Indented));
+    ui->txtJSON->setText("");
+}
+
+void tool::on_btnTimestamp_clicked()
+{
+    QDateTime dt= QDateTime::currentDateTime();
+    ui->dtDateTime->setDateTime(dt);
+
+    ui->stackedWidget->setCurrentWidget(ui->pageTimestamp);
+}
+
+void tool::on_btnConvert2Timestamp_clicked()
+{
+    QDateTime dt = ui->dtDateTime->dateTime();
+    ui->lineTimestamp->setText(QString::number(dt.toSecsSinceEpoch()));
+}
+
+void tool::on_btnConvert2Time_clicked()
+{
+    long long timestamp =  ui->lineTimestamp->text().trimmed().toLongLong();
+    QDateTime dt = QDateTime::fromSecsSinceEpoch(timestamp);
+    ui->dtDateTime->setDateTime(dt);
 }
