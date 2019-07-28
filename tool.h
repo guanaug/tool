@@ -5,7 +5,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <dialupdate.h>
 
-const QString CURR_VERSION = "v1.2.0";
+const QString CURR_VERSION = "v1.4.0";
 const QString UPDATE_URL = "https://api.github.com/repos/guanjialin/tool/releases/latest";
 
 namespace Ui {
@@ -47,12 +47,17 @@ private slots:
 
     void on_btnConvert2Time_clicked();
 
+    void on_cbWinTop_clicked(bool checked);
+
+    void on_btnRefresh_clicked();
+
 private:
     Ui::tool *ui;
     DialUpdate *diagUpdate;
 
 private:
     void checkUpdate();
+    void initUi();
     void initSignal();
 };
 

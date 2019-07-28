@@ -19,6 +19,7 @@ tool::tool(QWidget *parent) :
 {
     ui->setupUi(this);
     checkUpdate();
+    initUi();
 
     QTimer *timer = new QTimer(this);
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
@@ -28,6 +29,12 @@ tool::tool(QWidget *parent) :
 tool::~tool()
 {
     delete ui;
+}
+
+void tool::initUi()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageBase64);
+    this->on_btnRefresh_clicked();
 }
 
 void tool::on_btnBase64Enc_clicked()
@@ -159,4 +166,21 @@ void tool::on_btnConvert2Time_clicked()
     long long timestamp =  ui->lineTimestamp->text().trimmed().toLongLong();
     QDateTime dt = QDateTime::fromSecsSinceEpoch(timestamp);
     ui->dtDateTime->setDateTime(dt);
+}
+
+void tool::on_cbWinTop_clicked(bool checked)
+{
+    if (checked) {
+        this->setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    } else {
+        this->setWindowFlags(this->windowFlags() & ~Qt::WindowStaysOnTopHint);
+    }
+    this->show();
+}
+
+void tool::on_btnRefresh_clicked()
+{
+    QDateTime dt= QDateTime::currentDateTime();
+    ui->labStaticTime->setText(dt.toString("yyyy-MM-dd hh:mm:ss"));
+    ui->labStaticTimestamp->setText(QString::number(dt.toSecsSinceEpoch()));
 }
